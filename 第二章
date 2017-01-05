@@ -1,0 +1,341 @@
+模式和内模式的影响是唯一的，它定义了数据逻辑结构与存储结构之间的关系
+保证了数据与程序的物理独立性　简称为数据的物理独立性
+
+
+硬件平台和数据库
+　　　　　１足够大的内存　
+　　　　　　２足够大的磁盘来存放数据备份
+　　　　　３较高的通道的能力　　提高数据传送率
+
+》》》》》》》》》》》》》》》》软件
+       DBMS
+      DBMS操作系统
+
+　》》》》》》》》》》》》》》》》》》》》数据库结构级形式话定义
+
+
+关系数据库是支持扮戏模型的数据库系统
+　　　干洗数据机构　　关系操作集合　　和关系完整性约束３部分组成
+　　　候选码　　候选码的主属性　称为主属性
+　　　规范化的关系　称为范式　　不允许表中有表
+　　　　
+　　　主码
+      关系可以分为三种类型　基本关系　　基本表　　查询表　　视图表（不对应实际存储的数据）
+》》》》》》》》》》》》》》》》》》》》》》》》》。关系操作
+　　　　　　关系模式中的关系操作　包括　增删改查
+　　　　　　　查询是最主要的部分，选择　　投影　　链接　　除　并　　差　　交　笛卡尔积
+　　　　　　　一次一集合　　一次一记录
+　　　　　　聚合函数　关系赋值　算术运算等等
+
+》》》》》》》》》》》》》》》》》》》。。。。。
+
+　
+　　　　关系数据语言
+　　　　　　　　　　　　　　　　关系代数语言
+　　　　　　　　　　　　　　　　关系验算语言　　元组关系验算　域关系验算语言
+　　　　　　　　　　　　　　　　具有关系代数和关系验算双重细致的语言
+
+　　　　　左边关系Ｒ中要舍弃的元祖保留叫做　左外链接
+　　　　　　Ｓ要舍弃的保留叫做　右外链接
+　　　　　　　　　right out join right join
+
+    　　　投影操作是从列的角度上进行的运算得到一个新的关系
+
+
+　　　　　   sql select  create drop alter  d定义
+　　　　　　数据操纵　　insert update delete
+           数据控制　GRANT REVOKE
+
+          三级模式结构　
+　　　　　　　　　　　　模式　create schema   drop schema
+　　　　　　　　　　　　表    create table    drop table   alter table
+　　　　　　　　　　　　视图  create view      drop view
+　　　　　　　　　　　　索引   create index    drop index
+
+      不提供修改模式定义　修改视图定义　　修改索引定义　　　删掉重建
+》》》》》》》》》》》》》》》》》》》》》》》模式的定义和删除
+　　　　create schema <name> authorization <username>  必须有dba权限
+　　　　　　　　create SCHEMA "S-T" AUTHORIZATION WANG
+        create schema authorization wang  隐含为wang
+        schema 实际上定义了一个明明空间　　在这个命名空间下可以定义包含数据库对象　
+　　　　　　　　　基本表　　视图　　索引
+   
+　　　　　　　　　　　　　　　　　　　　ｓｈｉｔ
+　　　　　　　　create schema <name> authorization <username> |<defind tatable>| defind view| grant
+
+        删除模式　drop schema <模式名　><cascade|restrict>
+        cascade 和　ｒｅｓｔｒｉｃｔ两者必选其一
+　　　　　　　cascade  删除是同事删除数据库
+　　　　　　　ｒｅｓｔｒｉｃｔ　　限制　　表示如果该模式定义了下属的数据库对想
+　　　　　　　对象如果定了数据库对象　则表示拒绝对执行删除语句
+
+》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》基本表的定义删除和修改
+     1定义基本表
+　　　　　　　　create table <tablename> (列明　数据类型　　完整性约束)
+　　　　数据类性
+》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》模式与表
+  1在表名中明显的给出模式名
+　　　create table "s-t".student();
+　２创建模式的语句中同时创建表
+　３　设置所属模式
+
+　　第一个存在的模式即为数据库对象的模式名
+　　　　show search_path
+    设置搜索路径
+　　　　set search_path TO "S－T",PUBLIC;
+   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 修改基本表
+　　　　alter table <表明> 
+    add <新列明><数据类型><完整性约束>
+    drop　完整性约束名
+　　　　Alert column <列名> 数据类型
+　　　　alert table student add s_sdsfd DATE;
+    alert table Course add unique(cname)
+删除基本表
+　　　　drop table <name> restrict |cascade
+    若选择restrict 该表的删除是有约束　　该表不能被其他的表的约束所引用
+
+　　　若表上有视图则不能使用　restrrict时　表不能删除　　ｃａｓｃａｄｅ　时可以删除表
+　　　　　　视图也被自动删除
+　　　　create view is_student as 
+   select sno,sname,sage from student where sdept='is'
+  
+   drop table student restrict;
+   
+   drop table student cascade;
+  
+
+   select *from is_STUDENT
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>索引的建立与删除
+　　　　索引是加快查询速度的有效手段　，用户可以根据应用环境的需求　建立一个或多个缩影
+
+》》》》》》》》》》》》》》》》》》》建立索引
+　　　　　　　create [unique][cluster] index <索引名》　on <表名> 列名　<次序> <列名　次序》
+　　　　　
+　　　　　　unique 表明此索引　　的每一个索引值只对应唯一的数据记录
+　　　　　  cluster 表示要建立的索引是聚簇索引　指的是索引顺序与表中的记录完全一致的索引组织
+
+　　　create unique index 
+　　　　　例子：
+　　　　　　　　　　　　　create unique ndex Stusno On Student(Sno);
+             create unique index coucno On Course(Cno);
+             create unique index SCno on Sc(sno Asc,Cno desc);
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>删除索引
+　　　　　建立索引的是为了减少查询操作的时间，但是怎删改频繁　花费时间来维护缩影，从而降低了查询效率
+　　　　　　　　　Drop index < index name>
+       RDBMS 中索引一般采用　B+树　ＨＡＳＨ索引来实现
+　　　　　　B+树具有动态平衡的优点　　　ＨＡＳＨ索引具有查找速度块的特点　　　索引是关系数据库内部实现的技术
+　　　属于内模式
+　　　　　　　用户使用　create index　语句　　　　唯一索引　　非唯一索引　　局促缩影
+
+》》》》》》》》》》》》》》》》》》》》》》》》》》》》数据查询
+　　　　　select [all |distinct]<目标列明表达式>
+    from <表名和视图名>,【<表名或视图名>】
+　　　　where <条件表达式>
+　　　　group by  <列名> | having <条件表达式>
+    order by <列名２>[asc|desc]
+   
+   含义　　：根据where 子句条件表达式　从ｆｒｏｍ　字句指定的基本的表和视图中找出满足条件的元组，再按
+　　　　　　ｓｅｌｅｃｔ子句中的目标列表达式，选出元组中的属性值形成结果表
+　　　　　　　
+
+　　　　　　　如果与group　by 子句，则将结果按列名的值进行分组，该属性列的值相等的元组为一个组，通常会在
+　　　　　　　每组中作用聚合函数，如果ｇｒｏｕｐ　by　字句带ｈａｖｉｎｇ　短句　　则只有买组条件的组才能输出
+　　　　　　　　如果有order by 子句　　结果表还有按order by 来完成升续和姜旭
+
+
+》》》》》》》》》》》》》》》》》》
+　　　select sno ,sname 
+   from student;
+
+
+select sname, 2001-sage from student
+     >>目标列表达式不仅可以是算术表达式　　还可以是字符常量　　函数
+　　　　select sname ,'yrear of birth:'2004-sage,LOWER(Sdep) from student;
+
+
+    >>>>可以制定别名来改变查询结果的列标题　　对算术表达式　、常量。函数名的目标表达式尤为有用
+
+
+　　　　select sname Name,'yrear of birth' BIrth,2004-sage Birthday from student
+
+
+》》》》》》》》》》》》》》》》》》》》》选择表中的若干元组
+　　１　消除取值重复的行
+　　　　　distinct
+    select sno from sc;
+    select distinct sno from sc;  如果没有ｄｉｓｔｉｎｃｔ关键字　则缺省为all
+
+
+>>>>>>>>>>查询满足条件的元组
+　　　　　　　比较　＝　< > >= <= != <> !> !< NOI +上述运算符
+　　　　　　　确定范围　　between and  not between and
+           确定集合　　　in ,not in
+           字符匹配　　like , not like
+           空值　　is null is not null
+          　多重条件　　and or not
+     比较大小
+　　　　　　select Sname form student where sdept='cs'(全表扫描　取出一个元组检查是否等于　输出　负责跳过)
+　　　  select distinct sno form sc where grade<60
+
+    between ....and   和　not between....and...用来查找属性值自爱不再给定的范围内
+　　　select sname ,sdept,sage 
+   from student
+    where Sage not between 20 and 23;
+
+>>>>>>>>>>>>确定集合
+　　　谓词in 可以用来查找属性值制定的属性集合的元组
+　　　　　　select sname,ssex from student where sdept in('cs','ma','is')
+
+      select sname,ssex from student where sdept not in('cs','ma','is'
+
+>>>>>>>>>>>>>>>>>>>>>>>>>字符匹配
+　　\ 换吗字符
+(５)　涉及空值的查询
+　　　　select Sno ,Cno from sc where grade is null;  is 不能使用　＝号代替
+
+
+>>>>>>>>>使用and 和　or 可以用来联合多个查询条件　and　的优先级高于or 但用户可以根据括号来改变优先级
+　　　　　　　　　select  sname form student where sdept ='cs' and sage<20
+
+         select  sno ,grade from sc where cno='3'  or sdept ="MA" or sdept="IS"
+>>>>>>>>>order by 子句
+　　　　　　　　select sno,grade from sc where cno ='3' 
+        order by grade desc
+      对于空值　　　若按升许排　含空值的元组将最后显示，若按降续　空值元素将最先显示
+　　　　　　　select * from student order by sdept ,sage desc;
+  >>>>>>>>>>>>>>>>>>>>    聚合函数　
+        count([DISTINCT|ALL]*) 统计元组的个数
+　　　　　　　　count [distinct|all<列明>]t　统计一个列中的值的个数
+　　　　　　　　sum[distinct|all<列名>]　统计一列值的总和
+　　　　　　　　svg (distinct|all <列名>)求一列值的平均值
+　　　　　　　　max ([distinct|all]<列明)求一个列的值中的最大值
+　　　　　　　　min 求出最小值
+
+　　　　　select count(*) from student
+     select count (distnct sno) from sc;
+    
+
+    select avg(grade) from sc
+    where cno='1'
+
+    selet max(grade)
+    from sc
+    where cno='11'
+
+30
+    selet sum (Gradeit)
+   from sc,course
+   where sno='' and sc.cno=Course.cno
+  
+  >>>>>>>>>>>>>>>>>>group by 子句
+　　　　　　group by 子句　是将查询结果按某一列或者多列的值分组　　值相等的为一组
+　　　　　　　对查询结果分组是为了细化聚合函数的作用对象，如果未对查询结果分组，聚合函数将作用于整个查询结果　　　　　　
+　　　　　分组后聚合函数作用子每个组　　即每个组都有一个函数值
+　　　　　　　　　select cno,count(cno)
+         from sc
+         group by cno
+         先对cno 结果按cno 去分组　对所有具有Cno　值的元组分为一组　然后对每组进行count 计算
+　　　　　　　分组还要删选　则使用having
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>链接查询
+　　　　　　　　两个或两个以上的表
+
+　　　　　　　　　　　　　链接查询是数据库中主要的查询方式
+　　　　　包括　　值链接查询　　自然链接查询　　非等值链接查询　自身链接查询　
+　　　　　　　　　　　　　　　　　外链接查询和符合条件链接查询
+》》》》》》》》》》》》》》》》》》等值和非等值链接ｃｈａｘｕｎ
+　　　　　连接查询中where 字句中用来连接两个表的条件为连接条件或连接谓词
+　　　　　　　　　　where 表明.列名
+　　　　　　　　　　　=为等值连接　　　负责为非等值连接
+　　　　　　连接字段　　　连接条件中的个链接类型必须是科比的
+　　　　　　　　　
+
+      select  student .* sc.* from student，sc
+      where student.Sno=Sc.sno;   
+      嵌套循环算法
+　　　　在等值连接中吧目标中重复的属性去掉则为自然连接
+》》》》》》》》》》》》》》》》》》》》》》》自身连接
+　　　　　连接做做不经可以在两个表之间　也可是是一个表与起自身进行连接
+
+　　　　　　　　select first.cno,second.cpno 
+        from course first,course second
+        where first.cpno=second.cno;
+
+ >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.外链接
+　　　　左外连接列出左边关系的所有元组，右外连接列出右边关系的所有元组
+　　　　　　复合条件连接：
+　　　　　　　　select
+       from student ,sc, course
+       where studetn.sno=sc.sno and sc.cno=2 and sc.grade>90;
+       连接操作部除了可以两表操作，还可以使用两个或两个以上的表进行操作　多表连接
+
+　　　　　　　　select student.sno ,sname,Cname,Grade
+       from student,sc,cousre
+       where student.sno=sc.cnoand sc.cno=course.cno;
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>嵌套查询
+　　　　　　　　select from where 语句称为一个查询块　将一个查询块嵌套在一个查询块的where 字句或者having
+     短句的条件中　　的查询　　称为嵌套查询
+　　　　　　select sname from student where sno in (select sno form sc where cno=2)
+
+     sql　语言允许多层嵌套查询　　一个子查询还可以嵌套其他子查询
+　　　　　　　　　但是ｏｒｄｅｒ by 只能对最终的查询结果排序
+　　　　　　　简单到复杂
+　　　　　　　层层结构化
+　　》》>>>>>>>>>>>>>>>>>>>>带有in 谓词的子查询
+　　　　　　　　　　in 是嵌套查询中经常使用的谓词
+　　　　　select sno sname ,sdept
+     from sudent where sno in(
+		select sno 
+               from student
+              where sname='liucheng'
+
+)    子查询不依赖父查询的查找条件　　不相关子查询
+　　　　　结构化程序设计　　　相关嵌套查询
+　　　　　　　select sno,sname from student where sno in(selet sno
+                            from sc
+                            where cno in
+                            (select cno from Course where
+                             canme="信息系统"))
+
+
+》》》》》》》》》》》》》》》》》》》》》》带有比较运算符的子查询
+　　　　　select sno , sname,sdept,from student
+     where sdept=
+　　　　（select sdept from student where sname ='路库'）
+　　　　子查询一定要跟在比较符之后　　下列写法是错误的
+　　　　select sno ,cno from sc x 
+    where grade >=(
+     select avg(grade) 
+    from sc y
+   where y.sno=x.sno);  该值是与父类查询相关的　该类查询称为相关子查询
+
+　　select  sno ,cno 
+    from sc x
+   where grade>(
+     select sno
+     from sc y
+     where x.sno=y.sno;
+   )
+   )
+/******************************************88
+    select cno
+   from sc x
+   where grade>(
+   select svg(grade)
+   from sc y
+   where()
+   )
+》》》》》》》》》》》》》》》》》》》》》》》》》带有any 或all　谓词的子查询
+　　　
+
+
+ 
+
+
+　　　　　　　　　　　
+
