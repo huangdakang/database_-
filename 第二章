@@ -323,6 +323,7 @@ select sname, 2001-sage from student
    )
    )
 /******************************************88
+  相关子查询
     select cno
    from sc x
    where grade>(
@@ -331,7 +332,318 @@ select sname, 2001-sage from student
    where()
    )
 》》》》》》》》》》》》》》》》》》》》》》》》》带有any 或all　谓词的子查询
+　　　　>any 大于子查询结果中的牧歌值
+    >all 大于子查询结果中的所有值
+　　  <any 小于子查询结果中的某个值
+　　　<all 小于查询结果中的所有值
+　　　>=any  大于等于子查询中的牧歌值
+　　　>=all
+   <=any
+  <=all
+  =any
+  =all
+  !=any
+
+
+  !=alll
+    select sname,sage
+    from student
+    where sage<any(select sage
+                    from student
+                    where sdept="cs")
+   and sdept<> 'cs'
+
+
+
+   seletc sname ,sage 
+   from studnet
+   where sage < (
+    select max(sage)  
+    from student
+    where sdept='cs'
+)
+   and sdept<> 'cs'
+
+select sname aage
+from stuent
+where sage<all(select sage
+            from student
+            where sdept ='cs')
+            and sdept<> 'cs'
 　　　
+
+select sname ,sage
+from student
+where sage< (
+   select min(sage)
+    from studnet
+   where sdept='cs')
+  and sdept<> 'cs'
+
+使用聚合查询比使用子查询效率要高的多
+
+》》》》》》》》》》》》》》》》》》》》》》》带有exsits谓词的子查询
+
+exists 代表存在量 带有exists 谓词的子查询不反悔任何数据　只产生逻辑ｔｒｕｅ和逻辑false
+   select sname
+    from studnet
+   where exist
+( select * from sc 
+   where sno=studnet.sno and cno='1')  使用了存才量词如果层查询为空则返回　where 为true,负责返回假值
+　　给出列名无实际语义
+　　　　select sname 
+    from student
+    where not exist
+    (select * from sc 
+     where sno=student.sno and cono='1')
+
+   带有exists 量词的子查询直关心（⊙ｏ⊙）？诶次插叙师傅有返回值　斌不需要具体值，因此效率并不一定低于不相关的子查询　有事也是搞笑的方法
+　　　查询这样的学生　没有一门课是她不选的
+　　　　  select sname
+      from student
+      where not exists
+      ( select * 
+               from course
+               where not exists
+                        (select * 
+                         from sc
+                         where sno=student.sno
+                         and cno=course.cno))
+   seletc sno
+  from student
+   where not exist(
+   select 
+   from course c1
+   where not exits(
+    select *
+    from student s2
+    where s2.sno='2001522' and c1.cno=s2.cno)
+    
+  )
+ )
+
+/***************************EXISTS 2次********************************/
+   select sname
+    from student
+    where exists(
+       select *
+       from sc
+        wehre sc.sno=studnet.sno
+        and studuent. cno='1'
+   )
+
+  若果是空返回返回ｆａｌｓｅ　如果有值　　返回false   exists 引出的子查询表达是通常都是×，
+因为exsits的子查询返回真值或返回假值，给出的列名无实际意义
+　　　本例中的子查 
+
+　　　select sname
+         from student 
+        where not exist 
+          ( select * 
+             from sc where sno=student.sno and cno='1')
+        一些带exists 或者not exits  但是带in any all 谓词子查询　都能使用exits 谓词进行查询替换
+　　　　　　　由于带了exists量词的相关子查询只关心内层查询是否有返货值，并不需要具体的查询值
+　　　select sname
+   from student
+   where not exists(
+     select *
+    from course
+    where not exits(
+	select * 
+        from sc 
+        where sc.cno=course.con and stu.sno =coure.cno
+)
+  )
+
+   select sname from student
+
+   select sno 
+   from sc  sx
+   where not exists(
+      select   *
+      from sc sy
+      whew sy.sno='' and not exists(
+         select * from sc scz
+         where scz.sno=scx.sno and scz.cno=scy.cno));
+    )
+   )
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>集合查询
+
+　　　　集合操作　
+　　　　　　select 语句　的查询结果是元组的集合，所以select 语句的结果可以进行集合操作
+　　　　并　　union  交　　intersect 差　　except  。
+　　　　注意参加集合操作的查询结果的数列必须相同，对应的数据类型也必须形同
+　　　　　　　select * from Student  where Sdept ='cs' 
+       union select * from student where Sage <= 19
+
+
+       select sno from sc where cno='1' union select sno from sc where cno ='2'
+
+      　select *
+       from student 
+       where sdept = 'cs'
+       intersect
+       select * from student where Sage<=19
+
+      select sno 
+      from sc where scno='1'
+     intersect
+       select sno 
+      from sc
+      where cno ='2'
+
+      select * from student
+      where sdept='cs'
+      except
+      select * from student
+      where sage<=19;
+
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>select 语句的一般格式
+　　　select [all|distinct]<目标列表表达式>[别名]。。。
+　　　from <表名或视图名>【别名】
+　　 where <条件表达式》
+　　　group by <列明>　having <条件表达式>
+　　 order by <列名>　【ASC |DESC】
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>数据更新
+　　　插入子查询结果
+　　　　子查询中，不仅可以嵌套在select  语句中　还可以构造弗雷的查询条件　　也可以嵌套在insert 语句中
+　　　　　　　用于生成要插入的批量数据
+　　　　　　　　　插入子查询结果的insert 语句的格式为
+　　　　　　　　insert inot 表名　（属性列表，属性...）子查询
+　　create table depl_age 
+       (sdept char(15),avg_age smallint);
+
+
+   insert into dept_age(Sdept,Avg_age)
+    select sdept ,avg(age) from student 
+    group by sdept
+
+
+》》》》》》》》》》》》》》》》》》》》》》》》》》修改数据
+　　　修改操作有称为更新操作
+　　　   update <表明>
+　　　　　　set <列明>=<表达式>......
+      where <条件>
+　　　　修改某一元组中的值
+　　　　　　　 update student 
+       set age='22'
+      where sno='';
+    修改多个元组的值
+　　　　update student set age=age+1;
+  带子查询的修改语句
+　　update sc
+  set grade =0
+  where 'cs'
+   =(select sdept from student where student.sno=sc.sno)  ;
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>删除数据
+　　　　　删除语句的一般格式为
+　　　　　　　　　　　　delete
+            from <表明>
+　　　　　　　　　　　where <条件> 
+　　　　　delete 删除的是表中的数据，二不是不关于表的定义
+　　　　带子查询的的删除语句
+　　　　delete from sc where 'cs'=""
+
+>>>>>>>>>>>>>>>>>>>>>>`视图
+　　　　视图是一个或从几个表导出的表，它与基本表不同是一个虚表。数据库中存放视图的定义，而不存放视图对应的数据，这些数据任丛芳在原来的基本表中，视图已经定义就可以和基本表一样被查询　被删除　也可以在一个视图上定义视图，但对视图的更新操作是有一定限制的
+　　　　　　　　create view <视图名>　（<列名>，<列名>）as <子查询>　　[with check optin]
+       子查询可以是复杂的select 语句　但是通常不允许有ｏｒｄｅｒ　by 字句　和　distinct 短句
+　　　　　　　with checkoption 表示对视图进行　update insert delete 操作时　要保证更新，插入，删除的行买组视图定义的谓词条件（即子查询中的条件表达式）
+　　　　　组成视图的属性列名或者全部深绿或者去全部制定　没有第三中选择　　若果胜率则有子查询中的字段组成
+　　但是一下三种情况必须明确制定的注册呢歌诗图的全部列明
+　　　　　　　某个目标列不是单纯的属性名　而是聚集函数或者列表达式
+　　　　　　　多表链接时选出指定视图的所有列名
+　　　　　　　需要在视图中为牧歌列启用新的更合适的名字
+select view is_student 
+  as 
+  select sno ,sname sage
+   from student
+   where sdept='js'
+
+  RDBMS 执行了　create view 语句只把是视图的定义存储到数据字典中，ｂｉｎｄｅｒ不执行其中的select语句
+　　　　只有对视图进行查询码的时候　词按视图的定义从基本表中将数据查出
+  create view is_student as
+  select sno,sname,sage 
+  from student
+  where sdept='is'
+  with check option;
+
+
+　　如果一个视图是从单个基本表导出的　并且只是去掉了基本表中的木耳写行和列　单但保留了主码　我们称这类视s图为行列子级视图
+　　　create view is_si(sno,sname,grade)
+ as 
+   select  student.Sno,Sname,Grade
+   from student,sc
+   where sdept='IS' AND student.sno=sc.sno and sc.cno='1'
+视图不经可以建立在一个或多个基本表上　也可以建立在一个或多个已经定义好的视图上
+
+　　create view is_s2 as
+  select sno ,sname,grade
+  from is_s1
+  where grade>=90;
+
+ 定义了基本表　为了减少数据库中的冗余数据，表中只存放基本数据
+由基本表派生的数据一般是不存储的　由于视图中数据并不是实际存在　也称他们为虚拟咧
+　　带虚拟列的视图也称为带表达式的视图
+　  create view bt_s(sno,sname,sbirth) as
+   select sno,sname 2004-sage
+   from student
+
+  还可以带聚合函数的分组查询来定义视图，这种视图称为分组视图
+
+　create view s_G(Sno,Gavg)
+  as 
+  select sno,Avg(grade)
+  from sc
+  group by sno
+
+
+
+create view f_student (f_sno,sname,sex,age,dept)
+as 
+  select *
+  from student
+  where Ssex='女'
+
+　　这里　的视图是通过select * 建立的　f_student 视图的实行列有student 表的属性意义对应　若果一户修改了
+　基本表studnet 的结构　stuent he f－student视图之间的影响关系就破坏了　该视图就不能正常工作了
+　　修改基本表后是删除有基本表导出的视图
+
+　>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>　删除视图
+　　drop view <视图名>　[cascade]
+
+  视图定义从数据字典中删除　　还导出了其他视图　　则使用cascade级连删除　有他导出的视图一起删除
+　　drop view is_si cascade
+ >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>查询视图
+　　　定义　好了以后　可以像查询表一样　对视图进行查询了
+　　　select sno ,sage from is_student where sage<20
+   rdbms 执行对视图的查询时　首先进行有效性检查　查询包括设计的表视图是否存在，如果存在，则从数据字典中去除视图的定义，把定义中的查询和用户查询结合起来　转换成等价的对基本表的查询　然后在执行查询　　
+　　　这一转换过程叫做视图消解
+　　　目前多数关系数据库系统对行列子集视图的查询均能进行正确的转化，单对非行列子集的视图就不一定转化了
+　此类查询应该对基本表进行查询
+
+》》》》》》》》》》》》》》》》》》》》》》》》》》》》》更新视图是通过视图的插入　删除和修改数据的
+　　　由于视图是不存储数据的许彪　因此对视图的更新，最终要转化成对基本表的跟新，要查询视图那样　　
+　　对视图的的更新操作也是通过视图消解，转化为对基本表的更新操作
+
+　　　为了防止用户通过视图对数据进行增加　删除　修改时　有意一的对不属于视图范围的基本数据可以在定义视图是加上　with check option 字句
+　　　　update is_student set sname='流程'　　where sno='200212221'
+    
+
+   delete from is_student where sno='200212544'
+   行列子集视图是可以更新的
+
+
+
+
+
 
 
  

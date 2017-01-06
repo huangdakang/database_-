@@ -1,0 +1,118 @@
+数据库安全性　　　　不合法的使用造成数据泄露　更改和破坏
+　　　　　　　安全性问题不是数据库系统所独享的　
+　　　　　　数据安全性和计算机系统安全性　　包括计算机硬件　操作系统　网络安全等安全性
+
+　　　　计算机的安全性　包括技术安全性　管理安全性　政策法律类
+　　　　　　技术安全性是值　采用一定安全的硬件　软件来实现对计算机系统机器数据额安全保护
+
+　　　　　　　　管理安全
+　　　　　　政策法律安全
+
+
+技术安全性
+　　　tcsec  和　　cc　两个标准
+
+
+》》》》》》》》》》》》》》》》》》授权和回收
+　　　ＧＲＡＮＴ　ＲＥＶＯＫＥ 语句　　ＧＲＡＮＴ　就像用户授权　　revoke 收回授权
+
+　ＧＲＡＮＴ　的格式
+　　　GRANT <权限>...
+   ON <对象类型><对象名>...
+　　　To <用户>..
+   [with grant option]
+  
+ with check option 子句可以将获得莫中权限　不能传播该权限
+不允许循环授权
+　　GRANT SELECT 
+  ON TABEL STUDENT
+  TO UI
+  
+  GRANT ALL privileges
+  on table student,course
+  to u2,u3;
+   
+   grant select 
+   on table student
+   to public 
+
+
+   grant update (sno),select 
+   on table student
+   to u4
+
+   grant insert 
+   on table sc
+  to u5
+  with grant option   此时就可㔿传播次权限了
+　　
+
+　　grant insert
+  on table sc
+  to u6
+  with grant option
+
+
+   grant insert
+   on table sc
+   to u7
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>revoke 
+   可以将授权者的revoke语句回收　　格式为
+　　　　　revoke <权限>...
+    on <对象类><对象名>......
+   from <用户>。。。。[caseade | restrict]
+
+
+
+ revoke update(sno)
+  on table student
+  from u4
+
+ revoke select
+ on table sc
+ from public
+
+  revoke insert 
+  on table sc
+  from u5 cascade
+
+  revoke insert
+  on table sc
+  from us cascade
+
+  用户u5的insert 授权收回的时候必须用cascade 收回　不然系统拒绝restrict 执行该命令　一应为他受给了好多
+　　　
+
+　　create user <username>
+  with [DBA|resource|connect]
+  对creat user 语句说明如下
+　　只有数据库超级用户才有权创建一个新的数据库用户
+　　新创建的用户有三种　权限
+　　　connect , resource, dba
+   create user 中如果没有制定创建新用户的权限　默认拥有connect权限　　只能登录数据库
+　　　拥有resource 权限的用户能创建基本的表　视图　不能创建模式　不能创建新的用户
+
+
+　　DBA  可以进行任何操作
+
+
+》》》》》》》》》》》》》》》》》》》》》》》》》》数据库角色
+　　　
+　　　create role <角色名>
+
+》》》》》》》》》》》》》》》》》》》》》》》给角色授权
+　　grant <权限>，<权限>
+　　on <对象类型><对象名>
+　　to <角色>，。。。
+
+把一个角色授予其他角色　或用户
+　　grant <角色>,<角色２>
+　　TO <角色>，<用户>
+　　with admin option  获得莫衷权限的角色　还可以吧这种权限和角色授予其他角色
+　　　
+
+
+
+  
